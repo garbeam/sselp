@@ -1,0 +1,82 @@
+/* (C)opyright MMIV-MMVI Anselm R. Garbe <garbeam at gmail dot com>
+ * See LICENSE file for license details.
+ */
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <X11/Xlib.h>
+#include <X11/Xatom.h>
+#include <X11/Xutil.h>
+
+/* static */
+
+static void *
+emallocz(unsigned int size) {
+	void *res = calloc(1, size);
+
+	if(!res) {
+		fprintf(stderr, "fatal: could not malloc() %u bytes\n", size);
+		exit(EXIT_FAILURE);
+	}
+	return res;
+}
+
+static unsigned char *
+getselection(unsigned long offset, unsigned long *len, unsigned long *remain) {
+	Display *dpy;
+	Atom xa_clip_string;
+	Window w;
+	XEvent ev;
+	Atom typeret;
+	int format;
+	unsigned char *data;
+	unsigned char *result = NULL;
+
+	dpy = XOpenDisplay(NULL);
+	if(!dpy)
+		return NULL;
+	xa_clip_string = XInternAtom(dpy, "BLITZ_SEL_STRING", False);
+	w = XCreateSimpleWindow(dpy, DefaultRootWindow(dpy), 10, 10, 200, 200,
+			1, CopyFromParent, CopyFromParent);
+	XConvertSelection(dpy, XA_PRIMARY, XA_STRING, xa_clip_string,
+			w, CurrentTime);
+	XFlush(dpy);
+	XNextEvent(dpy, &ev);
+	if(ev.type == SelectionNotify && ev.xselection.property != None) {
+		XGetWindowProperty(dpy, w, ev.xselection.property, offset, 4096L, False,
+				AnyPropertyType, &typeret, &format, len, remain, &data);
+		if(*len) {
+			result = emallocz(sizeof(unsigned char) * *len);
+			memcpy(result, data, *len);
+		}
+		XDeleteProperty(dpy, w, ev.xselection.property);
+	}
+	XDestroyWindow(dpy, w);
+	XCloseDisplay(dpy);
+	return result;
+}
+
+/* extern */
+
+int
+main(int argc, char **argv) {
+	unsigned char *data;
+	unsigned long i, offset, len, remain;
+
+	if((argc > 1) && !strncmp(argv[1], "-v", 3)) {
+		fputs("spsel-"VERSION", (C)opyright MMVI Anselm R. Garbe\n", stdout);
+		exit(EXIT_SUCCESS);
+	}
+	len = offset = remain = 0;
+	do {
+		data = getselection(offset, &len, &remain);
+		for(i = 0; i < len; i++)
+			putchar(data[i]);
+		offset += len;
+		free(data);
+	}
+	while(remain);
+	if(offset)
+		putchar('\n');
+	return 0;
+}
