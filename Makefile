@@ -1,15 +1,15 @@
-# spsel - simple print selection
+# sselp - simple print selection
 #   (C)opyright MMVI Anselm R. Garbe
 
 include config.mk
 
-SRC = spsel.c
+SRC = sselp.c
 OBJ = ${SRC:.c=.o}
 
-all: options spsel
+all: options sselp
 
 options:
-	@echo spsel build options:
+	@echo sselp build options:
 	@echo "CFLAGS   = ${CFLAGS}"
 	@echo "LDFLAGS  = ${LDFLAGS}"
 	@echo "CC       = ${CC}"
@@ -21,31 +21,31 @@ options:
 
 ${OBJ}: config.mk
 
-spsel: ${OBJ}
+sselp: ${OBJ}
 	@echo LD $@
 	@${LD} -o $@ ${OBJ} ${LDFLAGS}
 	@strip $@
 
 clean:
 	@echo cleaning
-	@rm -f spsel ${OBJ} spsel-${VERSION}.tar.gz
+	@rm -f sselp ${OBJ} sselp-${VERSION}.tar.gz
 
 dist: clean
 	@echo creating dist tarball
-	@mkdir -p spsel-${VERSION}
-	@cp -R LICENSE Makefile README config.mk ${SRC} spsel-${VERSION}
-	@tar -cf spsel-${VERSION}.tar spsel-${VERSION}
-	@gzip spsel-${VERSION}.tar
-	@rm -rf spsel-${VERSION}
+	@mkdir -p sselp-${VERSION}
+	@cp -R LICENSE Makefile README config.mk ${SRC} sselp-${VERSION}
+	@tar -cf sselp-${VERSION}.tar sselp-${VERSION}
+	@gzip sselp-${VERSION}.tar
+	@rm -rf sselp-${VERSION}
 
 install: all
 	@echo installing executable file to ${DESTDIR}${PREFIX}/bin
 	@mkdir -p ${DESTDIR}${PREFIX}/bin
-	@cp -f spsel ${DESTDIR}${PREFIX}/bin
-	@chmod 755 ${DESTDIR}${PREFIX}/bin/spsel
+	@cp -f sselp ${DESTDIR}${PREFIX}/bin
+	@chmod 755 ${DESTDIR}${PREFIX}/bin/sselp
 
 uninstall:
 	@echo removing executable file from ${DESTDIR}${PREFIX}/bin
-	@rm -f ${DESTDIR}${PREFIX}/bin/spsel
+	@rm -f ${DESTDIR}${PREFIX}/bin/sselp
 
 .PHONY: all options clean dist install uninstall

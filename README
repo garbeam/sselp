@@ -1,11 +1,11 @@
-spsel - simple print selection
+sselp - simple print selection
 ==============================
 Prints X selection to standard out.
 
 
 Requirements
 ------------
-In order to build spsel you need the Xlib header files.
+In order to build sselp you need the Xlib header files.
 
 
 Installation
@@ -19,6 +19,6 @@ necessary as root):
     make clean install
 
 
-Running spsel
+Running sselp
 -------------
-Simply invoke the 'spsel' command.
+Simply invoke the 'sselp' command.
