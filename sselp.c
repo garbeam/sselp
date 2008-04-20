@@ -1,5 +1,4 @@
-/* (C)opyright MMIV-MMVI Anselm R. Garbe <garbeam at gmail dot com>
- * See LICENSE file for license details.
+/* See LICENSE file for license details.
  */
 #include <stdlib.h>
 #include <stdio.h>
@@ -24,6 +23,7 @@ emallocz(unsigned int size) {
 static unsigned char *
 getselection(unsigned long offset, unsigned long *len, unsigned long *remain) {
 	Display *dpy;
+	Atom utf8_string;
 	Atom xa_clip_string;
 	Window w;
 	XEvent ev;
@@ -35,10 +35,11 @@ getselection(unsigned long offset, unsigned long *len, unsigned long *remain) {
 	dpy = XOpenDisplay(NULL);
 	if(!dpy)
 		return NULL;
-	xa_clip_string = XInternAtom(dpy, "BLITZ_SEL_STRING", False);
+	utf8_string = XInternAtom(dpy, "UTF8_STRING", False);
+	xa_clip_string = XInternAtom(dpy, "_SSELP_STRING", False);
 	w = XCreateSimpleWindow(dpy, DefaultRootWindow(dpy), 10, 10, 200, 200,
 			1, CopyFromParent, CopyFromParent);
-	XConvertSelection(dpy, XA_PRIMARY, XA_STRING, xa_clip_string,
+	XConvertSelection(dpy, XA_PRIMARY, utf8_string, xa_clip_string,
 			w, CurrentTime);
 	XFlush(dpy);
 	XNextEvent(dpy, &ev);

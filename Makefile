@@ -1,5 +1,4 @@
 # sselp - simple print selection
-#   (C)opyright MMVI Anselm R. Garbe
 
 include config.mk
 
