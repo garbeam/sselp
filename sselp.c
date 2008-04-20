@@ -65,7 +65,7 @@ main(int argc, char **argv) {
 	unsigned long i, offset, len, remain;
 
 	if((argc > 1) && !strncmp(argv[1], "-v", 3)) {
-		fputs("sselp-"VERSION", (C)opyright MMVI Anselm R. Garbe\n", stdout);
+		fputs("sselp-"VERSION", © 2006-2008 Anselm R. Garbe\n", stdout);
 		exit(EXIT_SUCCESS);
 	}
 	len = offset = remain = 0;
