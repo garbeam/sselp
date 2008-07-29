@@ -9,17 +9,6 @@
 
 /* static */
 
-static void *
-emallocz(unsigned int size) {
-	void *res = calloc(1, size);
-
-	if(!res) {
-		fprintf(stderr, "fatal: could not malloc() %u bytes\n", size);
-		exit(EXIT_FAILURE);
-	}
-	return res;
-}
-
 static unsigned char *
 getselection(unsigned long offset, unsigned long *len, unsigned long *remain) {
 	Display *dpy;
@@ -47,7 +36,7 @@ getselection(unsigned long offset, unsigned long *len, unsigned long *remain) {
 		XGetWindowProperty(dpy, w, ev.xselection.property, offset, 4096L, False,
 				AnyPropertyType, &typeret, &format, len, remain, &data);
 		if(*len) {
-			result = emallocz(sizeof(unsigned char) * *len);
+			result = malloc(sizeof(unsigned char) * *len);
 			memcpy(result, data, *len);
 		}
 		XDeleteProperty(dpy, w, ev.xselection.property);
