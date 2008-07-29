@@ -12,7 +12,6 @@ options:
 	@echo "CFLAGS   = ${CFLAGS}"
 	@echo "LDFLAGS  = ${LDFLAGS}"
 	@echo "CC       = ${CC}"
-	@echo "LD       = ${LD}"
 
 .c.o:
 	@echo CC $<
@@ -21,9 +20,8 @@ options:
 ${OBJ}: config.mk
 
 sselp: ${OBJ}
-	@echo LD $@
-	@${LD} -o $@ ${OBJ} ${LDFLAGS}
-	@strip $@
+	@echo CC -o $@
+	@${CC} -o $@ ${OBJ} ${LDFLAGS}
 
 clean:
 	@echo cleaning
