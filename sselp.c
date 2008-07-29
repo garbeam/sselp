@@ -1,5 +1,4 @@
-/* See LICENSE file for license details.
- */
+/* See LICENSE file for license details. */
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -7,10 +6,8 @@
 #include <X11/Xatom.h>
 #include <X11/Xutil.h>
 
-/* static */
-
 static unsigned char *
-getselection(unsigned long offset, unsigned long *len, unsigned long *remain) {
+getsel(unsigned long offset, unsigned long *len, unsigned long *remain) {
 	Display *dpy;
 	Atom utf8_string;
 	Atom xa_clip_string;
@@ -46,20 +43,18 @@ getselection(unsigned long offset, unsigned long *len, unsigned long *remain) {
 	return result;
 }
 
-/* extern */
-
 int
 main(int argc, char **argv) {
 	unsigned char *data;
 	unsigned long i, offset, len, remain;
 
 	if((argc > 1) && !strncmp(argv[1], "-v", 3)) {
-		fputs("sselp-"VERSION", © 2006-2008 Anselm R. Garbe\n", stdout);
+		fputs("sselp-"VERSION", © 2006-2008 Anselm R Garbe\n", stdout);
 		exit(EXIT_SUCCESS);
 	}
 	len = offset = remain = 0;
 	do {
-		data = getselection(offset, &len, &remain);
+		data = getsel(offset, &len, &remain);
 		for(i = 0; i < len; i++)
 			putchar(data[i]);
 		offset += len;
