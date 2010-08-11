@@ -6,7 +6,7 @@
 
 int
 main(int argc, char *argv[]) {
-	Atom utf8, type;
+	Atom clip, utf8, type;
 	Display *dpy;
 	Window win;
 	XEvent ev;
@@ -23,15 +23,16 @@ main(int argc, char *argv[]) {
 		return 1;
 
 	utf8 = XInternAtom(dpy, "UTF8_STRING", False);
+	clip = XInternAtom(dpy, "_SSELP_STRING", False);
 	win = XCreateSimpleWindow(dpy, DefaultRootWindow(dpy), 0, 0, 1, 1, 0,
 	                          CopyFromParent, CopyFromParent);
-	XConvertSelection(dpy, XA_PRIMARY, utf8, None, win, CurrentTime);
+	XConvertSelection(dpy, XA_PRIMARY, utf8, clip, win, CurrentTime);
 
 	XNextEvent(dpy, &ev);
 	if(ev.type == SelectionNotify && ev.xselection.property != None) {
 		do {
-			XGetWindowProperty(dpy, win, utf8, off, BUFSIZ, False,
-			                   utf8, &type, &fmt, &len, &more, &data);
+			XGetWindowProperty(dpy, win, ev.xselection.property, off, BUFSIZ,
+				           False, utf8, &type, &fmt, &len, &more, &data);
 			fwrite(data, 1, len, stdout);
 			XFree(data);
 			off += len;
