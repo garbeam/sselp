@@ -35,7 +35,7 @@ main(int argc, char *argv[]) {
 				           False, utf8, &type, &fmt, &len, &more, &data);
 			fwrite(data, 1, len, stdout);
 			XFree(data);
-			off += len;
+			off += len/4;
 		}
 		while(more > 0);
 		putchar('\n');
